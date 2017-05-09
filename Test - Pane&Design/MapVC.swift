@@ -50,6 +50,7 @@ class MapVC: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
         
         if delegate != nil {
             
+            self.mapView.showsUserLocation = false
             for annotation in self.mapView.annotations {
                 delegate?.didSelectLocation(lat: annotation.coordinate.latitude, lng: annotation.coordinate.longitude)
             }
