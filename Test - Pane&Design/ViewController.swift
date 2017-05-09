@@ -63,9 +63,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             if let forecast = self.forecast {
                 
-                if let interval = forecast.updatedDate?.timeIntervalSinceNow, interval > 3600 {
+                if let interval = forecast.updatedDate?.timeIntervalSinceNow, -(interval) > 3600 {
                     
                     print("Interval: \(interval)")
+                    
+                    if let location = locationManager.location {
+                        
+                        weather.locationLat = location.coordinate.latitude
+                        weather.locationLng = location.coordinate.longitude
+                    }
                     
                     weather.downloadData(byCity: false, completed: { 
                         self.updateForecast()
@@ -95,7 +101,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             locationManager.requestWhenInUseAuthorization()
         }
         
-        
+        let interval = forecast?.updatedDate?.timeIntervalSinceNow
+        print("interval: \(String(describing: -interval!))")
 
         
     }
