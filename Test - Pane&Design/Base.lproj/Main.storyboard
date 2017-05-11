@@ -47,8 +47,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="388"/>
                                             <color key="backgroundColor" red="0.17496372511666525" green="0.70713753316326677" blue="1" alpha="0.60225813356164382" colorSpace="custom" customColorSpace="sRGB"/>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j36-Fl-zLw">
-                                            <rect key="frame" x="16" y="194" width="343" height="35"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today, May 9" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j36-Fl-zLw">
+                                            <rect key="frame" x="16" y="163" width="343" height="35"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="35" id="A0n-8z-CfY"/>
                                             </constraints>
@@ -56,8 +56,8 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7W-Vi-egx">
-                                            <rect key="frame" x="16" y="61" width="343" height="35"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Undefined Location" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o7W-Vi-egx">
+                                            <rect key="frame" x="16" y="30" width="343" height="35"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="35" id="cKd-fT-z3q"/>
                                             </constraints>
@@ -65,8 +65,8 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6a0-xT-Yj0">
-                                            <rect key="frame" x="16" y="111" width="343" height="75"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 ºC" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6a0-xT-Yj0">
+                                            <rect key="frame" x="16" y="80" width="343" height="75"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="75" id="QC7-3Q-YsD"/>
                                             </constraints>
@@ -161,7 +161,7 @@
                                         <constraint firstAttribute="bottom" secondItem="5U7-NU-EOK" secondAttribute="bottom" id="oqd-uK-sv4"/>
                                         <constraint firstItem="qjS-Ax-fHN" firstAttribute="leading" secondItem="oat-9e-QE3" secondAttribute="leading" constant="8" id="ovI-ZO-o0s"/>
                                         <constraint firstAttribute="bottom" secondItem="tFO-Hc-myA" secondAttribute="bottom" id="tKx-yQ-u61"/>
-                                        <constraint firstItem="o7W-Vi-egx" firstAttribute="top" secondItem="oat-9e-QE3" secondAttribute="top" constant="61" id="uV1-KO-zXP"/>
+                                        <constraint firstItem="o7W-Vi-egx" firstAttribute="top" secondItem="oat-9e-QE3" secondAttribute="top" constant="30" id="uV1-KO-zXP"/>
                                         <constraint firstAttribute="trailing" secondItem="qjS-Ax-fHN" secondAttribute="trailing" constant="8" id="voV-6G-a79"/>
                                     </constraints>
                                 </view>
@@ -269,7 +269,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="626" y="790"/>
+            <point key="canvasLocation" x="624.79999999999995" y="789.35532233883066"/>
         </scene>
         <!--MapVC-->
         <scene sceneID="VfD-rQ-H4e">
@@ -324,7 +324,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="h6c-tm-bBY" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="rgY-rC-yLG">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rgY-rC-yLG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

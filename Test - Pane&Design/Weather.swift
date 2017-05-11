@@ -102,8 +102,18 @@ class Weather: NSObject {
         })
     }
     
+    override var description: String {
+        return "Weather: {temp: \(String(describing: _temp)); city: \(String(describing: _city));}"
+    }
+    
     var iconId: Int {
-        return _iconId ?? 0
+        set(newIconId) {
+            self._iconId = newIconId
+        }
+        get {
+            return _iconId ?? 0
+        }
+        
     }
     
     var locationLat: Double {
@@ -134,11 +144,8 @@ class Weather: NSObject {
         
         let date = Date(timeIntervalSince1970: _date!)
         
-        print("Date: \(String(describing: _date))")
-        
         return "Today, \(dateFormatter.string(from: date))"
-        
-        
+
     }
     
     var dateShort: String {

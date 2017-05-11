@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import CoreLocation
+import CoreData
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate, WeatherLocationDelegate, CLLocationManagerDelegate {
     
@@ -30,8 +31,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var weatherForecast = [Weather]()
     var weatherPerDay = [Weather]()
     
+    
+    var forecast: Forecast?
+    
+    
     var isFirstLaunch: Bool = true
     let locationManager = CLLocationManager()
+    
+    var managedObjectContext: NSManagedObjectContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,8 +52,116 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         searchBar.delegate = self
         
         locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
         
+        managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        
+        self.loadForecast()
+        
+        if forecast == nil {
+            locationManager.requestWhenInUseAuthorization()
+        } else {
+            
+            if let forecast = self.forecast {
+                
+                if let interval = forecast.updatedDate?.timeIntervalSinceNow, -(interval) > 3600 {
+                    
+                    print("Interval: \(interval)")
+                    
+                    if let location = locationManager.location {
+                        
+                        weather.locationLat = location.coordinate.latitude
+                        weather.locationLng = location.coordinate.longitude
+                    }
+                    
+                    weather.downloadData(byCity: false, completed: { 
+                        self.updateForecast()
+                        self.updateUI()
+                    })
+                } else {
+                    self.weather._date = forecast.date
+                    self.weather.temp = forecast.temp!
+                    self.weather.city = forecast.city!
+                    self.weather.locationLat = forecast.latitude
+                    self.weather.locationLng = forecast.longitude
+                    self.weather.iconDescr = forecast.iconRef!
+                    self.weather.iconId = Int(forecast.iconId)
+                    self.updateUI()
+                }
+                
+            }
+        }
+        
+        let status: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
+        if status == CLAuthorizationStatus.authorizedWhenInUse {
+            self.downloadForecast(byCity: false, completed: {
+                self.collectionView.reloadData()
+                self.tableView.reloadData()
+            })
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+        }
+        
+        let interval = forecast?.updatedDate?.timeIntervalSinceNow
+        print("interval: \(String(describing: -interval!))")
+
+        
+    }
+    
+    // MARK: CoreData manipulation
+    func saveForecast() {
+        
+        print("Save: \(weather.description)")
+        
+        let currentForecast = Forecast(context: managedObjectContext)
+        currentForecast.date = weather._date!
+        currentForecast.city = weather.city
+        currentForecast.latitude = weather.locationLat
+        currentForecast.longitude = weather.locationLng
+        currentForecast.temp = weather.temp
+        currentForecast.iconRef = weather.iconDescr
+        currentForecast.updatedDate = NSDate()
+        currentForecast.iconId = Int64(weather.iconId)
+        
+        do {
+            try self.managedObjectContext.save()
+        } catch {
+            print("Could not save data")
+        }
+        
+    }
+    
+    func updateForecast() {
+        
+        print("Update: \(weather.description)")
+        
+        forecast?.date = weather._date!
+        forecast?.city = weather.city
+        forecast?.latitude = weather.locationLat
+        forecast?.longitude = weather.locationLng
+        forecast?.temp = weather.temp
+        forecast?.updatedDate = NSDate()
+        forecast?.iconId = Int64(weather.iconId)
+        
+        do {
+            try self.managedObjectContext.save()
+        } catch {
+            print("Could not save data")
+        }
+    }
+    
+    func loadForecast() {
+        let forecastRequest:NSFetchRequest<Forecast> = Forecast.fetchRequest()
+        
+        do {
+            let tempForecast = try managedObjectContext.fetch(forecastRequest)
+            print("Forecast count: \(tempForecast.count)")
+            if let forecast = tempForecast.last {
+                self.forecast = forecast
+            }
+            
+        } catch {
+            print("Could not load data from CoreData db: \(error.localizedDescription)")
+        }
         
     }
     
@@ -55,21 +170,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if status == .authorizedWhenInUse {
             if isFirstLaunch {
                 
-                if let location = manager.location {
-                    print("Found user's location: \(location)")
-                    weather.locationLat = location.coordinate.latitude
-                    weather.locationLng = location.coordinate.longitude
-                    
-                    weather.downloadData(byCity: false, completed: {
-                        self.updateUI()
-                    })
-                    
-                    self.downloadForecast(byCity: false) {
-                        self.collectionView.reloadData()
-                        self.tableView.reloadData()
+                if (forecast == nil) {
+                    if let location = manager.location {
+                        print("Found user's location: \(location)")
+                        weather.locationLat = location.coordinate.latitude
+                        weather.locationLng = location.coordinate.longitude
+                        
+                        weather.downloadData(byCity: false, completed: {
+                            self.updateUI()
+                            
+                            if self.forecast == nil {
+                                self.saveForecast()
+                            }
+                            
+                        })
+                        
+                        self.downloadForecast(byCity: false) {
+                            self.collectionView.reloadData()
+                            self.tableView.reloadData()
+                        }
                     }
+                    isFirstLaunch = false
                 }
-                isFirstLaunch = false
+                
             }
         }
     }
@@ -95,8 +218,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             weather.locationLat = location.coordinate.latitude
             weather.locationLng = location.coordinate.longitude
             
-            weather.downloadData(byCity: false, completed: { 
+            weather.downloadData(byCity: false, completed: {
+                
                 self.updateUI()
+                self.updateForecast()
+                
             })
             
             self.downloadForecast(byCity: false, completed: { 
@@ -113,12 +239,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         weather.locationLng = lng
         
         weather.downloadData(byCity: false) {
+            
+            self.updateForecast()
             self.updateUI()
-        }
-        
-        self.downloadForecast(byCity: false) {
-            self.collectionView.reloadData()
-            self.tableView.reloadData()
+            
+            self.downloadForecast(byCity: false) {
+                self.collectionView.reloadData()
+                self.tableView.reloadData()
+            }
+            
         }
         
     }
@@ -267,11 +396,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // sun
         // windy
         
-        if weather.iconId != 0{
+        if weather.iconId != 0 {
             if weather.iconId >= 600 && weather.iconId <= 622 {
                 self.bgImageView.image = UIImage(named: "Snow")
             }
-            
             if weather.iconId == 800 {
                 self.bgImageView.image = UIImage(named: "Sun")
             } else if weather.iconId >= 200 && weather.iconId <= 232 {
@@ -289,9 +417,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             } else {
                 self.bgImageView.backgroundColor = .blue
             }
+        } else {
+            print("IconID is 0")
         }
-        
-        
         
     }
     
@@ -305,6 +433,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             weather.downloadData(byCity: true) {
                 self.updateUI()
+                self.updateForecast()
             }
             self.downloadForecast(byCity: true) {
                 self.collectionView.reloadData()

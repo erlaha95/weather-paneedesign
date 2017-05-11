@@ -7,5 +7,6 @@ target 'Test - Pane&Design' do
 
   # Pods for Test - Pane&Design
   pod 'Alamofire', '~> 4.4'
+  pod 'ReachabilitySwift', '~> 3'
 
 end
