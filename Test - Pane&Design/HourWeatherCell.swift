@@ -16,6 +16,7 @@ class HourWeatherCell: UICollectionViewCell {
     
     @IBOutlet weak var degreeLbl: UILabel!
     
+    static let defaultReuseIdentifier = "HourWeatherCell"
     
     func configureCell(weather: Weather) {
         

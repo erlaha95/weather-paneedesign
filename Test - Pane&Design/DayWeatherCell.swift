@@ -16,6 +16,8 @@ class DayWeatherCell: UITableViewCell {
     
     @IBOutlet weak var iconImageView: UIImageView!
     
+    static let defaultReuseIdentifier = "DayWeatherCell"
+    
     let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     
     override func awakeFromNib() {
