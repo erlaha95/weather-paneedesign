@@ -102,8 +102,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         let interval = forecast?.updatedDate?.timeIntervalSinceNow
-        print("interval: \(String(describing: -interval!))")
-
+        
+        if let interval = interval {
+            print("interval: \(-interval)")
+        }
+        
         
     }
     
@@ -466,7 +469,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DayWeatherCell") as! DayWeatherCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: DayWeatherCell.defaultReuseIdentifier) as! DayWeatherCell
         cell.configureCell(weather: weatherPerDay[indexPath.row])
         
         return cell
@@ -483,7 +486,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HourWeatherCell", for: indexPath) as! HourWeatherCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HourWeatherCell.defaultReuseIdentifier, for: indexPath) as! HourWeatherCell
         
         cell.configureCell(weather: weatherForecast[indexPath.item])
         return cell
